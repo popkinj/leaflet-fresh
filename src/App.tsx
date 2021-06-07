@@ -1,13 +1,17 @@
 import React from 'react';
 import 'leaflet/dist/leaflet.css';
-import PouchDB from 'pouchdb-browser';
 import {
   MapContainer,
   TileLayer,
-  LayersControl
+  LayersControl,
+  Marker
 } from 'react-leaflet';
-import PouchDBTileLayer from "react-leaflet-pouchdb-tilelayer";
+import MarkerClusterGroup from 'react-leaflet-cluster';
+// const data = require('./bridges.json')
+import * as data from './bridges.json'
 import './App.css';
+
+console.log(data);
 
 function App() {
   return (
@@ -22,12 +26,6 @@ function App() {
             url='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
           />
         </LayersControl.BaseLayer>
-        {/* <LayersControl.BaseLayer name="Pouch Offline Layer">
-          <PouchDBTileLayer
-            url='https://server.arcgisonline.com/ArcGIS/rest/services/World_Terrain_Base/MapServer/tile/{z}/{y}/{x}'
-            crossOrigin={true}
-          />
-        </LayersControl.BaseLayer> */}
       </LayersControl>
     </MapContainer>
   );
