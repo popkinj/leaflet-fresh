@@ -42,7 +42,7 @@ function App() {
                   .geometry[0].geometry.coordinates;
                 return (<Marker
                   key={index}
-                  position={[geom[0],geom[1]]}
+                  position={[geom[1],geom[0]]}
                   icon={myIcon}
                 ></Marker>);
               }
