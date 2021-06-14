@@ -1,17 +1,21 @@
-import React from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import 'leaflet/dist/leaflet.css';
 import {
   MapContainer,
   TileLayer,
   LayersControl,
-  Marker
+  Marker,
+  useMap
 } from 'react-leaflet';
 import L from 'leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import * as data from './activities.json'
 import './App.css';
-import marker from 'leaflet/dist/images/marker-icon.png'
-import markerShadow from 'leaflet/dist/images/marker-shadow.png'
+import marker from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+
+// import localforage from 'localforage';
+// import 'leaflet-offline';
 
 const myIcon = L.icon({
   iconUrl: marker,
@@ -22,13 +26,23 @@ const myIcon = L.icon({
   shadowSize: [68, 95],
   shadowAnchor: [22, 94]
 });
+
+
+const Offline = () => {
+  const map = useMap();
+  console.log(map);
+  return null;
+}
+
 function App() {
+
   return (
     <MapContainer
       center={[55,-128]}
       zoom={5}
       style={{height: '100%'}}
     >
+      <Offline/>
       <LayersControl position='topright'>
         <LayersControl.BaseLayer checked name="Regular Layer">
           <TileLayer
