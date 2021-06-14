@@ -22,7 +22,8 @@
     "typeRoots": ["./types",".node_modules/@types"]
   },
   "include": [
-    "src"
+    "src",
+    "spinner"
   ],
   "exclude": [
     "node_modules",

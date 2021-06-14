@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+// import React, { useContext, useEffect, useRef, useState } from 'react';
 import 'leaflet/dist/leaflet.css';
 import {
   MapContainer,
@@ -13,9 +13,11 @@ import * as data from './activities.json'
 import './App.css';
 import marker from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+import Spinner from './spinner/Spinner';
 
-// import localforage from 'localforage';
-// import 'leaflet-offline';
+// Offline dependencies
+import localforage from 'localforage';
+import 'leaflet-offline';
 
 const myIcon = L.icon({
   iconUrl: marker,
@@ -27,11 +29,57 @@ const myIcon = L.icon({
   shadowAnchor: [22, 94]
 });
 
+const storeLayersStyle = {
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  position: 'absolute',
+  backgroundColor: 'white',
+  color: '#464646',
+  width: '2.7rem',
+  height: '2.7rem',
+  top: '148px',
+  left: '5px',
+  zIndex: 1000,
+  borderRadius: '4px',
+  cursor: 'pointer'
+} as React.CSSProperties;
+
+// Style the image inside the download button
+const iconStyle = {
+  transform: 'scale(0.7)',
+  opacity: '0.7'
+};
 
 const Offline = () => {
   const map = useMap();
-  console.log(map);
-  return null;
+  const offlineLayer = (L.tileLayer as any).offline(
+    'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    localforage,
+    {
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      subdomains: 'apc',
+      minZoom: 13,
+      maxZoom: 19,
+      crossOrigin: true
+    }
+    )
+  offlineLayer.addTo(map);
+
+  const storeLayers = () => {
+    console.log('the button has been clicked.');
+  }
+
+
+  return (
+    <div id="offline-layers-button" title="Offline layers" onClick={storeLayers} style={storeLayersStyle}>
+      {/* TODO:
+        1. Toggle between spinner and image depending on 'offlineing' status
+        2. Swap image style based on zoom level
+      */}
+      {offlineing ? <Spinner></Spinner> : <img src="/download.svg" style={iconStyle}></img>}
+    </div>
+  );
 }
 
 function App() {
@@ -42,7 +90,9 @@ function App() {
       zoom={5}
       style={{height: '100%'}}
     >
+      {/* Here is the offline component */}
       <Offline/>
+
       <LayersControl position='topright'>
         <LayersControl.BaseLayer checked name="Regular Layer">
           <TileLayer
