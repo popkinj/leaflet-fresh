@@ -38,8 +38,10 @@ const storeLayersStyle = {
   color: '#464646',
   width: '2.7rem',
   height: '2.7rem',
-  top: '148px',
-  left: '5px',
+  border: '2px solid rgba(0,0,0,0.2)',
+  backgroundClip: 'padding-box',
+  top: '10px',
+  left: '10px',
   zIndex: 1000,
   borderRadius: '4px',
   cursor: 'pointer'
@@ -58,21 +60,28 @@ const Offline = () => {
     localforage,
     {
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      subdomains: 'apc',
-      minZoom: 13,
-      maxZoom: 19,
+      subdomains: 'abc',
+      // minZoom: 13,
+      // maxZoom: 19,
       crossOrigin: true
     }
-    )
+  )
   offlineLayer.addTo(map);
 
   const storeLayers = () => {
     console.log('the button has been clicked.');
   }
 
+  const offlineing = false;
+
 
   return (
-    <div id="offline-layers-button" title="Offline layers" onClick={storeLayers} style={storeLayersStyle}>
+    <div
+      id="offline-layers-button"
+      title="Offline layers"
+      onClick={storeLayers}
+      style={storeLayersStyle}
+    >
       {/* TODO:
         1. Toggle between spinner and image depending on 'offlineing' status
         2. Swap image style based on zoom level
@@ -89,6 +98,7 @@ function App() {
       center={[55,-128]}
       zoom={5}
       style={{height: '100%'}}
+      zoomControl={false}
     >
       {/* Here is the offline component */}
       <Offline/>
