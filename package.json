@@ -13,7 +13,7 @@
     "@types/react-dom": "^17.0.0",
     "@types/react-leaflet": "^2.8.1",
     "leaflet": "^1.7.1",
-    "leaflet-offline": "^1.1.0",
+    "leaflet.offline": "^2.0.0-beta.4",
     "localforage": "^1.9.0",
     "pouchdb-browser": "^7.2.2",
     "react": "^17.0.2",

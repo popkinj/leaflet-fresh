@@ -1,4 +1,4 @@
-// import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import 'leaflet/dist/leaflet.css';
 import {
   MapContainer,
@@ -17,7 +17,7 @@ import Spinner from './spinner/Spinner';
 
 // Offline dependencies
 import localforage from 'localforage';
-import 'leaflet-offline';
+import 'leaflet.offline';
 
 const myIcon = L.icon({
   iconUrl: marker,
@@ -56,8 +56,9 @@ const iconStyle = {
 const Offline = () => {
   const map = useMap();
   const offlineLayer = (L.tileLayer as any).offline(
-    'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    localforage,
+    // 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+    // localforage,
     {
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       subdomains: 'abc',
@@ -68,12 +69,22 @@ const Offline = () => {
   )
   offlineLayer.addTo(map);
 
-  const storeLayers = () => {
-    console.log('the button has been clicked.');
+  let [offlineing, setOfflineing] = useState(false);
+
+  const saveBasemapControl = (L.control as any).savetiles(offlineLayer, {
+    zoomlevels: [13,14,15,16,17],
+    confirm(_: any, successCallback: any) {
+      successCallback(true);
+    }
+  })
+
+  saveBasemapControl._map = map;
+
+  const storeLayers = async () => {
+    setOfflineing(true);
+    await saveBasemapControl._saveTiles();
+    setOfflineing(false);
   }
-
-  const offlineing = false;
-
 
   return (
     <div
@@ -104,11 +115,11 @@ function App() {
       <Offline/>
 
       <LayersControl position='topright'>
-        <LayersControl.BaseLayer checked name="Regular Layer">
+        {/* <LayersControl.BaseLayer checked name="Regular Layer">
           <TileLayer
             url='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
           />
-        </LayersControl.BaseLayer>
+        </LayersControl.BaseLayer> */}
         <LayersControl.Overlay checked name="Activities">
           <MarkerClusterGroup chunkedLoading>
             {(data as any).rows.map((row:any,index:any) => {
