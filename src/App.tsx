@@ -83,6 +83,7 @@ const Offline = () => {
   const storeLayers = async () => {
     setOfflineing(true);
     await saveBasemapControl._saveTiles();
+    // XXX: This is firing to quickly
     setOfflineing(false);
   }
 
