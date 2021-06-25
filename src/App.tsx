@@ -53,55 +53,90 @@ const iconStyle = {
   opacity: '0.7'
 };
 
+const testCluster  = function (this: any) {
+  this.eachLayer((l: any) => {
+    if (l.refreshClusters) {
+      l.refreshClusters();
+    }
+  })
+}
+
 const Offline = () => {
   const map = useMap();
   const offlineLayer = (L.tileLayer as any).offline(
-    // 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    // localforage,
     {
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       subdomains: 'abc',
-      // minZoom: 13,
-      // maxZoom: 19,
       crossOrigin: true
     }
   )
   offlineLayer.addTo(map);
-
-  let [offlineing, setOfflineing] = useState(false);
-
-  const saveBasemapControl = (L.control as any).savetiles(offlineLayer, {
-    zoomlevels: [13,14,15,16,17],
-    confirm(_: any, successCallback: any) {
-      successCallback(true);
-    }
-  })
-
-  saveBasemapControl._map = map;
-
-  const storeLayers = async () => {
-    setOfflineing(true);
-    await saveBasemapControl._saveTiles();
-    // XXX: This is firing to quickly
-    setOfflineing(false);
-  }
-
   return (
     <div
       id="offline-layers-button"
       title="Offline layers"
-      onClick={storeLayers}
+      onClick={testCluster.bind(map)}
       style={storeLayersStyle}
     >
       {/* TODO:
         1. Toggle between spinner and image depending on 'offlineing' status
         2. Swap image style based on zoom level
       */}
-      {offlineing ? <Spinner></Spinner> : <img src="/download.svg" style={iconStyle}></img>}
+      <img src="/download.svg" style={iconStyle}></img>
     </div>
   );
-}
+};
+
+// const Offline = () => {
+//   const map = useMap();
+//   const offlineLayer = (L.tileLayer as any).offline(
+//     // 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+//     'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+//     // localforage,
+//     {
+//       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+//       subdomains: 'abc',
+//       // minZoom: 13,
+//       // maxZoom: 19,
+//       crossOrigin: true
+//     }
+//   )
+//   offlineLayer.addTo(map);
+
+//   let [offlineing, setOfflineing] = useState(false);
+
+//   const saveBasemapControl = (L.control as any).savetiles(offlineLayer, {
+//     zoomlevels: [13,14,15,16,17],
+//     confirm(_: any, successCallback: any) {
+//       successCallback(true);
+//     }
+//   })
+
+//   saveBasemapControl._map = map;
+
+//   const storeLayers = async () => {
+//     setOfflineing(true);
+//     await saveBasemapControl._saveTiles();
+//     // XXX: This is firing to quickly
+//     setOfflineing(false);
+//   }
+
+//   return (
+//     <div
+//       id="offline-layers-button"
+//       title="Offline layers"
+//       onClick={storeLayers}
+//       style={storeLayersStyle}
+//     >
+//       {/* TODO:
+//         1. Toggle between spinner and image depending on 'offlineing' status
+//         2. Swap image style based on zoom level
+//       */}
+//       {offlineing ? <Spinner></Spinner> : <img src="/download.svg" style={iconStyle}></img>}
+//     </div>
+//   );
+// }
 
 function App() {
 
